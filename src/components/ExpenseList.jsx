@@ -1,9 +1,24 @@
-
+import { useEffect, useState } from 'react';
 import '../styles/ExpenseList.css'
+import ConformationModel from './ConformationModel';
 
+export default function ExpenseList(){
+const [expenses, setExpenses] = useState([]);
+const loadExpenses = () => {
+    const savedExpenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+    setExpenses(savedExpenses);
+};
 
-export default function ExpenseList({expenses}){
+useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadExpenses();
+}, []);
+const totalAmount = expenses.reduce(
+    (sum, item) => sum + Number(item.amount),
+    0
+);
     return(
+        <>
         <div className='ExpenseList'>
             <div className='list-search'>
                 <div>
@@ -41,10 +56,11 @@ export default function ExpenseList({expenses}){
                 </thead>
 
                 <tbody>
-                    {expenses.map((expense) => (
-                    <tr>
+                    
+                    {expenses.length>0?(expenses.map((expense) => (
+                    <tr key={expense.id}>
                         <td>{expense.amount}</td>
-                        <td>{expense.shopping}</td>
+                        <td>{expense.description}</td>
                         <td>{expense.date}</td>
                         <td>{expense.category}</td>
                         <td className="table-actions">
@@ -53,13 +69,28 @@ export default function ExpenseList({expenses}){
                            <button className="btn-readmore">View</button>
                         </td>
                     </tr>
-                    ))}
+                    ))):(
+                        <>
+                        <tr>
+                            <td colspan="7" className="no-data">No Expenses Found</td>
+                        </tr>
+                        </>
+                    )}
 
                     <tr className="expense-total">
-                        <td colspan={5}>TOtal: ₹2,000</td>
+                        <td colspan="7">TOtal: {totalAmount}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <ConformationModel
+           title="Delete Expense"
+           message={"Are you sure you want to delete this expense "}
+           confirmText="Delete"
+           confirmText="Cancel"
+           onCancel={() => {}}
+           onConfirm={() => {}}
+        />
+        </>
     );
 }

@@ -1,8 +1,10 @@
-import { BiCategory } from "react-icons/bi";
 import "../styles/ExpenseForm.css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {v4 as uuidv4 } from "uuid";
 
 export default function ExpenseForm(){
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         amount: "",
         description: '',
@@ -41,9 +43,15 @@ export default function ExpenseForm(){
     const handleSubmit=(e)=>{
         e.preventDefault();
         if (!validate()) return;
-        console.log("Expense Added Successfully",
-            formData.amount,formData.description,formData.date,formData.category);
+
+        const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+        const newExpense = {...formData,id: uuidv4() };
+
+        localStorage.setItem('expenses', JSON.stringify([...expenses, newExpense]));
+        console.log("Expense Added Successfully",newExpense);
+        navigate("/");
     }
+
     return(
         <div className="expenseform">
             <form onSubmit={handleSubmit}>
