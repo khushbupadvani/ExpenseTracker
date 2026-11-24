@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import '../styles/ExpenseList.css'
 import ConformationModel from './ConformationModel';
 import EditModel from './EditModel';
+import { useNavigate } from 'react-router-dom';
 
 export default function ExpenseList() {
     const [expenses, setExpenses] = useState([]);
     const [deleteExpense, setDeleteExpense] = useState(null);
     const [openModel, setOpenModel] = useState(false);
     const [editId, setEditId] = useState(null);
+    const navigate = useNavigate();
 
     const loadExpenses = () => {
         const savedExpenses = JSON.parse(localStorage.getItem("expenses") || "[]");
@@ -41,6 +43,10 @@ export default function ExpenseList() {
     const editHandler = (id) => {
         setEditId(id);
         setOpenModel(true);
+    };
+    // Read more handler
+    const handleReadMore = (id) => {
+        navigate(`/expenseDetails/${id}`);
     };
 
     return (
@@ -93,8 +99,12 @@ export default function ExpenseList() {
                                     <button className="btn-delete"
                                         onClick={() => setDeleteExpense(expense)}>Delete</button>
                                     <button className="btn-edit"
-                                    onClick={() => editHandler(expense.id)}>Edit</button>
-                                    <button className="btn-readmore">View</button>
+                                        onClick={() => editHandler(expense.id)}>Edit</button>
+                                    <button className="btn-readmore"
+                                     onClick={() => handleReadMore(expense.id)}
+                                     >
+                                        Read More
+                                    </button>
                                 </td>
                             </tr>
                         ))) : (
@@ -123,7 +133,11 @@ export default function ExpenseList() {
                 />
             )}
             {openModel && editId !== null && (
-                <EditModel/>
+                <EditModel
+                   editId={editId}
+                   onClose={() => setOpenModel(false)}
+                   onUpdate={loadExpenses}
+                />
             )}
         </>
     );
