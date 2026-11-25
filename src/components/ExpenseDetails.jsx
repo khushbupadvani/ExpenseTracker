@@ -14,12 +14,12 @@ function ExpenseDetails() {
     }, [id]);
   return (
     <>
-    <div className='expenses-details'>
+    <div className='expense-details'>
         <h1>Expense DEtails</h1>
 
         <div className="details-card">
-            <p><strong>Amount</strong> ₹{expenses?.amount}</p>
-            <p><strong>Description:</strong> {expenses?.decription}</p>
+            <p><strong>Amount:</strong> ₹{expenses?.amount}</p>
+            <p><strong>Description:</strong> {expenses?.description}</p>
             <p><strong>Date:</strong> {expenses?.date}</p>
             <p><strong>Category:</strong> {expenses?.category}</p>
         </div>
